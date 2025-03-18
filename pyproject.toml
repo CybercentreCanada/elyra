@@ -2,12 +2,12 @@
 build-backend = "hatchling.build"
 requires = [
     "hatchling>=1.5.0",
-    "jupyterlab~=4.2.5,<4.4",
+    "jupyterlab>=4.0.0,<5",
     "hatch-nodejs-version>=0.3.2"
 ]
 
 [project]
-name="elyra"
+name="elyra_cccs"
 description="Elyra provides AI Centric extensions to JupyterLab"
 maintainers = [
     {name = "Elyra Maintainers"},
@@ -27,15 +27,15 @@ dependencies = [
     "jupyter-events>=0.7.0",
     "jupyter-packaging>=0.12.3",
     "jupyter_server>=2.7.3",
-    "jupyterlab>=4.0,<4.4",  # comment out to use local jupyterlab
-    "jupyterlab-lsp~=5.1.0",  # comment out to use local jupyterlab
-    "jupyterlab-git~=0.50.2",  # Avoid breaking 1.x changes
-    "jupyter-resource-usage~=1.1.0",
+    # "jupyterlab>=4.0,<4.4",  # comment out to use local jupyterlab
+    # "jupyterlab-lsp~=5.1.0",  # comment out to use local jupyterlab
+    # "jupyterlab-git~=0.50.2",  # Avoid breaking 1.x changes
+    # "jupyter-resource-usage~=1.1.0",
     "MarkupSafe>=2.1",
     "minio>=7.0.0,!=7.2.1",
     "nbclient>=0.10.0",
     "nbconvert>=6.5.1",
-    "nbdime~=4.0.1",  # Cap from jupyterlab-git
+    # "nbdime~=4.0.1",  # Cap from jupyterlab-git
     "nbformat>=5.1.2",
     "networkx>=2.5.1",
     "papermill>=2.3.4",
@@ -118,40 +118,40 @@ all = [
 # Console scripts
 [project.scripts]
 elyra-metadata = "elyra.metadata.metadata_app:MetadataApp.main"
-elyra-pipeline = "elyra.cli.pipeline_app:pipeline"
-jupyter-elyra = "elyra.elyra_app:launch_instance"
+# elyra-pipeline = "elyra.cli.pipeline_app:pipeline"
+# jupyter-elyra = "elyra.elyra_app:launch_instance"
 
 # Elyra entry points
 [project.entry-points."metadata.schemaspaces"]
-runtimes = "elyra.metadata.schemaspaces:Runtimes"
-runtimes-images = "elyra.metadata.schemaspaces:RuntimeImages"
+# runtimes = "elyra.metadata.schemaspaces:Runtimes"
+# runtimes-images = "elyra.metadata.schemaspaces:RuntimeImages"
 code-snippets = "elyra.metadata.schemaspaces:CodeSnippets"
 component-catalogs = "elyra.metadata.schemaspaces:ComponentCatalogs"
-metadata-tests = "elyra.tests.metadata.test_utils:MetadataTestSchemaspace"
+# metadata-tests = "elyra.tests.metadata.test_utils:MetadataTestSchemaspace"
 
 [project.entry-points."metadata.schemas_providers"]
-runtimes = "elyra.metadata.schemasproviders:RuntimesSchemas"
-runtimes-images = "elyra.metadata.schemasproviders:RuntimeImagesSchemas"
+# runtimes = "elyra.metadata.schemasproviders:RuntimesSchemas"
+# runtimes-images = "elyra.metadata.schemasproviders:RuntimeImagesSchemas"
 code-snippets = "elyra.metadata.schemasproviders:CodeSnippetsSchemas"
 component-catalogs = "elyra.metadata.schemasproviders:ComponentCatalogsSchemas"
-airflow-provider-package-catalog-schema = "elyra.pipeline.airflow.provider_package_catalog_connector.airflow_provider_package_schema_provider:AirflowProviderPackageSchemasProvider"
-airflow-package-catalog-schema = "elyra.pipeline.airflow.package_catalog_connector.airflow_package_schema_provider:AirflowPackageSchemasProvider"
-metadata-tests = "elyra.tests.metadata.test_utils:MetadataTestSchemasProvider"
+# airflow-provider-package-catalog-schema = "elyra.pipeline.airflow.provider_package_catalog_connector.airflow_provider_package_schema_provider:AirflowProviderPackageSchemasProvider"
+# airflow-package-catalog-schema = "elyra.pipeline.airflow.package_catalog_connector.airflow_package_schema_provider:AirflowPackageSchemasProvider"
+# metadata-tests = "elyra.tests.metadata.test_utils:MetadataTestSchemasProvider"
 
-[project.entry-points."elyra.pipeline.processors"]
-local = "elyra.pipeline.local.local_processor:LocalPipelineProcessor"
-airflow = "elyra.pipeline.airflow.airflow_processor:AirflowPipelineProcessor"
-kfp = "elyra.pipeline.kfp.kfp_processor:KfpPipelineProcessor"
+# [project.entry-points."elyra.pipeline.processors"]
+# local = "elyra.pipeline.local.local_processor:LocalPipelineProcessor"
+# airflow = "elyra.pipeline.airflow.airflow_processor:AirflowPipelineProcessor"
+# kfp = "elyra.pipeline.kfp.kfp_processor:KfpPipelineProcessor"
 
-[project.entry-points."elyra.component.catalog_types"]
-url-catalog = "elyra.pipeline.catalog_connector:UrlComponentCatalogConnector"
-local-file-catalog = "elyra.pipeline.catalog_connector:FilesystemComponentCatalogConnector"
-local-directory-catalog = "elyra.pipeline.catalog_connector:DirectoryComponentCatalogConnector"
-airflow-provider-package-catalog = "elyra.pipeline.airflow.provider_package_catalog_connector.airflow_provider_package_catalog_connector:AirflowProviderPackageCatalogConnector"
-airflow-package-catalog = "elyra.pipeline.airflow.package_catalog_connector.airflow_package_catalog_connector:AirflowPackageCatalogConnector"
+# [project.entry-points."elyra.component.catalog_types"]
+# url-catalog = "elyra.pipeline.catalog_connector:UrlComponentCatalogConnector"
+# local-file-catalog = "elyra.pipeline.catalog_connector:FilesystemComponentCatalogConnector"
+# local-directory-catalog = "elyra.pipeline.catalog_connector:DirectoryComponentCatalogConnector"
+# airflow-provider-package-catalog = "elyra.pipeline.airflow.provider_package_catalog_connector.airflow_provider_package_catalog_connector:AirflowProviderPackageCatalogConnector"
+# airflow-package-catalog = "elyra.pipeline.airflow.package_catalog_connector.airflow_package_catalog_connector:AirflowPackageCatalogConnector"
 
-[project.entry-points."papermill.engine"]
-ElyraEngine = "elyra.pipeline.elyra_engine:ElyraEngine"
+# [project.entry-points."papermill.engine"]
+# ElyraEngine = "elyra.pipeline.elyra_engine:ElyraEngine"
 
 # Include license file in base/root of repository
 [license]
@@ -178,52 +178,52 @@ core-metadata-version = "2.3"
 "labextensions/elyra_code_snippet_extension/labextension" = "share/jupyter/labextensions/@elyra/code-snippet-extension"
 "labextensions/elyra_metadata_common/labextension" = "share/jupyter/labextensions/@elyra/metadata-common"
 "labextensions/elyra_metadata_extension/labextension" = "share/jupyter/labextensions/@elyra/metadata-extension"
-"labextensions/elyra_pipeline_editor_extension/labextension" = "share/jupyter/labextensions/@elyra/pipeline-editor-extension"
-"labextensions/elyra_python_editor_extension/labextension" = "share/jupyter/labextensions/@elyra/python-editor-extension"
-"labextensions/elyra_r_editor_extension/labextension" = "share/jupyter/labextensions/@elyra/r-editor-extension"
-"labextensions/elyra_scala_editor_extension/labextension" = "share/jupyter/labextensions/@elyra/scala-editor-extension"
-"labextensions/elyra_script_debugger_extension/labextension" = "share/jupyter/labextensions/@elyra/script-debugger-extension"
-"labextensions/elyra_script_editor/labextension" = "share/jupyter/labextensions/@elyra/script-editor"
+# "labextensions/elyra_pipeline_editor_extension/labextension" = "share/jupyter/labextensions/@elyra/pipeline-editor-extension"
+# "labextensions/elyra_python_editor_extension/labextension" = "share/jupyter/labextensions/@elyra/python-editor-extension"
+# "labextensions/elyra_r_editor_extension/labextension" = "share/jupyter/labextensions/@elyra/r-editor-extension"
+# "labextensions/elyra_scala_editor_extension/labextension" = "share/jupyter/labextensions/@elyra/scala-editor-extension"
+# "labextensions/elyra_script_debugger_extension/labextension" = "share/jupyter/labextensions/@elyra/script-debugger-extension"
+# "labextensions/elyra_script_editor/labextension" = "share/jupyter/labextensions/@elyra/script-editor"
 "labextensions/elyra_services/labextension" = "share/jupyter/labextensions/@elyra/services"
-"labextensions/elyra_theme_extension/labextension" = "share/jupyter/labextensions/@elyra/theme-extension"
+# "labextensions/elyra_theme_extension/labextension" = "share/jupyter/labextensions/@elyra/theme-extension"
 "labextensions/elyra_ui_components/labextension" = "share/jupyter/labextensions/@elyra/ui-components"
 "etc/config/jupyter_notebook_config.d" = "etc/jupyter/jupyter_notebook_config.d"
 "etc/config/jupyter_server_config.d" = "etc/jupyter/jupyter_server_config.d"
-"etc/config/settings" = "etc/jupyter/labconfig"
-"etc/config/metadata/runtime-images" = "share/jupyter/metadata/runtime-images"
-"etc/config/metadata/component-catalogs" = "share/jupyter/metadata/component-catalogs"
-"etc/config/components" = "share/jupyter/components"
-"etc/config/components/kfp" = "share/jupyter/components/kfp/"
-"etc/config/components/airflow" = "share/jupyter/components/airflow/"
+# "etc/config/settings" = "etc/jupyter/labconfig"
+# "etc/config/metadata/runtime-images" = "share/jupyter/metadata/runtime-images"
+# "etc/config/metadata/component-catalogs" = "share/jupyter/metadata/component-catalogs"
+# "etc/config/components" = "share/jupyter/components"
+# "etc/config/components/kfp" = "share/jupyter/components/kfp/"
+# "etc/config/components/airflow" = "share/jupyter/components/airflow/"
 
 # Specify which files to include and exclude in source distribution
 [tool.hatch.build.targets.sdist]
 core-metadata-version = "2.3"
 artifacts = [
     "labextensions/elyra_code_snippet_extension/labextension",
-    "labextensions/elyra_code_viewer_extension/labextension",
+    # "labextensions/elyra_code_viewer_extension/labextension",
     "labextensions/elyra_metadata_common/labextension",
     "labextensions/elyra_metadata_extension/labextension",
-    "labextensions/elyra_pipeline_editor_extension/labextension",
-    "labextensions/elyra_python_editor_extension/labextension",
-    "labextensions/elyra_r_editor_extension/labextension",
-    "labextensions/elyra_scala_editor_extension/labextension",
-    "labextensions/elyra_script_debugger_extension/labextension",
-    "labextensions/elyra_script_editor/labextension",
+    # "labextensions/elyra_pipeline_editor_extension/labextension",
+    # "labextensions/elyra_python_editor_extension/labextension",
+    # "labextensions/elyra_r_editor_extension/labextension",
+    # "labextensions/elyra_scala_editor_extension/labextension",
+    # "labextensions/elyra_script_debugger_extension/labextension",
+    # "labextensions/elyra_script_editor/labextension",
     "labextensions/elyra_services/labextension",
-    "labextensions/elyra_theme_extension/labextension",
+    # "labextensions/elyra_theme_extension/labextension",
     "labextensions/elyra_ui_components/labextension",
 ]
 include = [
     "labextensions",
     "elyra",
-    "etc/config/components/*.json",
-    "etc/config/components/kfp*/.yaml",
+    # "etc/config/components/*.json",
+    # "etc/config/components/kfp*/.yaml",
     "etc/config/jupyter_notebook_config.d/*.json",
     "etc/config/jupyter_server_config.d/*.json",
-    "etc/config/metadata/runtime-images/*.json",
-    "etc/config/metadata/component-registries/*.json",
-    "etc/config/settings/*.json",
+    # "etc/config/metadata/runtime-images/*.json",
+    # "etc/config/metadata/component-registries/*.json",
+    # "etc/config/settings/*.json",
 ]
 exclude = [
     "*.ipynb",
