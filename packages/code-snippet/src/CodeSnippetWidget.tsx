@@ -56,7 +56,7 @@ import {
 } from '@jupyterlab/ui-components';
 
 import { find } from '@lumino/algorithm';
-import { MimeData } from '@lumino/coreutils';
+import { MimeData, UUID } from '@lumino/coreutils';
 import { Drag } from '@lumino/dragdrop';
 import { Widget } from '@lumino/widgets';
 
@@ -166,39 +166,26 @@ class CodeSnippetDisplay extends MetadataDisplay<ICodeSnippetDisplayProps> {
         }
 
         const notebookContent = notebookWidget.content;
+        const sharedModel = notebookContent.model?.sharedModel;
         const activeCellIndex = notebookContent.activeCellIndex ?? -1;
 
-        const contentFactory = new NotebookPanel.ContentFactory({
-          editorFactory:
-            this.props.editorServices.factoryService.newInlineEditor
-        });
-
-        /*
-          interface CodeCellCreatorOption {
-          model: ICodeCellModel | undefined;
-          rendermime: RenderMimeRegistry;
-          contentFactory: any;
-          cell_type: string;
+        if (!sharedModel) {
+          this.showErrDialog('Notebook shared model is unavailable.');
+          return;
         }
-        */
 
-        const options: CodeCell.IOptions = {
-          model: notebookContent.activeCell?.model as ICodeCellModel,
-          rendermime: notebookContent.rendermime,
-          contentFactory: contentFactory
+        // Create a new cell
+        const newCell: Partial<nbformat.ICodeCell> & { cell_type: string } = {
+          id: UUID.uuid4(),
+          cell_type: 'code',
+          metadata: {},
+          source: '',
+          outputs: [],
+          execution_count: null
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- API mismatch
-        const codeCell: any = contentFactory.createCodeCell(options);
-        codeCell.cell_type = 'code';
-        //insert the new code cell into the notebook at the specified index
-
-        // codeCell: CodeCell
-        // codeCell: SharedCell.Cell
-        widget.content.model?.sharedModel.insertCell(
-          activeCellIndex,
-          codeCell as Partial<nbformat.ICodeCell> & { cell_type: string }
-        );
+        // Insert the new cell into the notebook's shared model
+        sharedModel.insertCell(activeCellIndex + 1, newCell);
 
         //update the active cell index to the newly inserted cell
         notebookWidget.content.activeCellIndex = activeCellIndex + 1;
