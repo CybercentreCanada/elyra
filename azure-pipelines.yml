@@ -3,8 +3,7 @@ trigger:
     include:
       - cccs-main
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: cybertron-build-pool
 
 variables:
   tag: '$(Build.BuildId)'
@@ -76,4 +75,4 @@ stages:
           - script: |
               pip install twine
               python -m twine upload --skip-existing -r pypi-bagofholding --config-file $(PYPIRC_PATH) $(Pipeline.Workspace)/dist/* --verbose
-            displayName: 'Publish artifact to analytical-platform feed'
+            displayName: 'Publish artifact to BagOfHolding feed'
