@@ -14,10 +14,6 @@ stages:
     jobs:
       - job: BuildPythonArtifact
         displayName: Build and package python artifacts.
-        strategy:
-          matrix:
-            Python:
-              python.version: '3.11'
 
         steps:
           - task: NodeTool@0
@@ -25,7 +21,7 @@ stages:
               versionSpec: '20.x'
 
           - script: |
-              python$(python.version) -m pip install -U "jupyterlab>=4.0.0,<5" "jupyter-packaging>=0.10" build
+              python -m pip install -U "jupyterlab>=4.0.0,<5" "jupyter-packaging>=0.10" build
             displayName: 'Install dependencies'
 
           - script: |
