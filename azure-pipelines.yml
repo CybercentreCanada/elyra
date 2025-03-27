@@ -70,10 +70,10 @@ stages:
 
           - task: TwineAuthenticate@1
             inputs:
-              artifactFeed: Analytical Platform/analytical-platform
+              pythonUploadServiceConnection: pypi-bagofholding
             displayName: 'Twine Authenticate'
 
           - script: |
               pip install twine
-              python -m twine upload --skip-existing -r analytical-platform --config-file $(PYPIRC_PATH) $(Pipeline.Workspace)/dist/*
+              python -m twine upload --skip-existing -r pypi-bagofholding --config-file $(PYPIRC_PATH) $(Pipeline.Workspace)/dist/* --verbose
             displayName: 'Publish artifact to analytical-platform feed'
