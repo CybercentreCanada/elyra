@@ -3,8 +3,7 @@ trigger:
     include:
       - cccs-main
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: cybertron-build-pool
 
 variables:
   tag: '$(Build.BuildId)'
@@ -25,23 +24,22 @@ stages:
             inputs:
               versionSpec: '20.x'
 
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '$(python.version)'
-            displayName: 'Use Python $(python.version)'
-
           - script: |
+              virtualenv -p python$(python.version) env
+              source env/bin/activate
               python -m pip install -U "jupyterlab>=4.0.0,<5" "jupyter-packaging>=0.10" build
             displayName: 'Install dependencies'
 
           - script: |
               set -eux
+              source env/bin/activate
               make package-ui-prod
             displayName: 'Package UI for production'
 
           - script: |
               set -eux
               echo '.$(tag)' >> version.txt
+              source env/bin/activate
               make build-server
             displayName: 'Build and package backend'
 
@@ -70,10 +68,12 @@ stages:
 
           - task: TwineAuthenticate@1
             inputs:
-              artifactFeed: Analytical Platform/analytical-platform
+              pythonUploadServiceConnection: pypi-bagofholding
             displayName: 'Twine Authenticate'
 
           - script: |
+              virtualenv -p python$(python.version) env
+              source env/bin/activate
               pip install twine
-              python -m twine upload --skip-existing -r analytical-platform --config-file $(PYPIRC_PATH) $(Pipeline.Workspace)/dist/*
-            displayName: 'Publish artifact to analytical-platform feed'
+              python -m twine upload --skip-existing -r pypi-bagofholding --config-file $(PYPIRC_PATH) $(Pipeline.Workspace)/dist/* --verbose
+            displayName: 'Publish artifact to BagOfHolding feed'
