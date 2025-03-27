@@ -32,12 +32,14 @@ stages:
 
           - script: |
               set -eux
+              source env/bin/activate
               make package-ui-prod
             displayName: 'Package UI for production'
 
           - script: |
               set -eux
               echo '.$(tag)' >> version.txt
+              source env/bin/activate
               make build-server
             displayName: 'Build and package backend'
 

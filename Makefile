@@ -76,27 +76,27 @@ purge:
 	rm -rf $(yarn cache dir)
 
 uninstall:
-	pip uninstall -y jupyterlab-git
-	pip uninstall -y nbdime
-	pip uninstall -y jupyter-lsp
+	$(PYTHON_PIP) uninstall -y jupyterlab-git
+	$(PYTHON_PIP) uninstall -y nbdime
+	$(PYTHON_PIP) uninstall -y jupyter-lsp
 	- jupyter labextension uninstall @krassowski/jupyterlab-lsp
-	pip uninstall -y jupyterlab-lsp
-	pip uninstall -y python-lsp-server
-	pip uninstall -y jupyter-resource-usage
+	$(PYTHON_PIP) uninstall -y jupyterlab-lsp
+	$(PYTHON_PIP) uninstall -y python-lsp-server
+	$(PYTHON_PIP) uninstall -y jupyter-resource-usage
 	- jupyter labextension uninstall @jupyter-server/resource-usage
-	pip uninstall -y elyra
+	$(PYTHON_PIP) uninstall -y elyra
 	- jupyter lab clean
 	# remove Kubeflow Pipelines example components
-	- pip uninstall -y elyra-examples-kfp-catalog
+	- $(PYTHON_PIP) uninstall -y elyra-examples-kfp-catalog
 	# remove GitLab dependency
-	- pip uninstall -y python-gitlab
+	- $(PYTHON_PIP) uninstall -y python-gitlab
 
 clean: purge uninstall ## Make a clean source tree and uninstall extensions
 
 ## Lint targets
 
 lint-dependencies:
-	@pip install -q -r lint_requirements.txt
+	@$(PYTHON_PIP) install -q -r lint_requirements.txt
 
 lint-server: lint-dependencies
 	$(PYTHON) -m flake8 elyra .github
@@ -138,12 +138,12 @@ dev-unlink:
 ## Build and install targets
 
 build-dependencies:
-	@pip install -q --upgrade pip
-	@pip install -q -r build_requirements.txt
+	@$(PYTHON_PIP) install -q --upgrade pip
+	@$(PYTHON_PIP) install -q -r build_requirements.txt
 
 dev-dependencies:
-	@pip install -q --upgrade pip
-	@pip install -q jupyter-packaging
+	@$(PYTHON_PIP) install -q --upgrade pip
+	@$(PYTHON_PIP) install -q jupyter-packaging
 
 yarn-install:
 	yarn install
@@ -162,10 +162,10 @@ build-server: # Build backend
 	$(PYTHON) -m build
 
 uninstall-server-package:
-	@pip uninstall elyra -y
+	@$(PYTHON_PIP) uninstall elyra -y
 
 install-server-package: uninstall-server-package
-	pip install --upgrade --upgrade-strategy $(UPGRADE_STRATEGY) "$(shell find dist -name "elyra-*-py3-none-any.whl")[kfp-tekton]"
+	$(PYTHON_PIP) install --upgrade --upgrade-strategy $(UPGRADE_STRATEGY) "$(shell find dist -name "elyra-*-py3-none-any.whl")[kfp-tekton]"
 
 install-server: build-dependencies lint-server build-server install-server-package ## Build and install backend
 
@@ -180,11 +180,11 @@ install-all-dev: package-ui-dev install-server install-examples install-gitlab-d
 install-examples: ## Install example pipeline components
 	# install Kubeflow Pipelines example components
 	# -> https://github.com/elyra-ai/examples/tree/main/component-catalog-connectors/kfp-example-components-connector
-	- pip install --upgrade elyra-examples-kfp-catalog
+	- $(PYTHON_PIP) install --upgrade elyra-examples-kfp-catalog
 
 install-gitlab-dependency:
 	# install GitLab support for Airflow
-	- pip install --upgrade python-gitlab
+	- $(PYTHON_PIP) install --upgrade python-gitlab
 
 check-install:
 	# Expected to fail due to elyra/ai#3058
@@ -201,13 +201,13 @@ elyra-image-env: ## Creates a conda env consisting of the dependencies used in i
 	- conda env remove -y -n $(ELYRA_IMAGE_ENV)
 	conda create -y -n $(ELYRA_IMAGE_ENV) python=$(PYTHON_VERSION) --channel conda-forge
 	$(CONDA_ACTIVATE) $(ELYRA_IMAGE_ENV) && \
-	pip install -r etc/generic/requirements-elyra.txt && \
+	$(PYTHON_PIP) install -r etc/generic/requirements-elyra.txt && \
 	conda deactivate;
 
 ## Test targets
 
 test-dependencies:
-	@pip install -q -r test_requirements.txt
+	@$(PYTHON_PIP) install -q -r test_requirements.txt
 
 pytest:
 	$(PYTHON) -m pytest -v --durations=0 --durations-min=60 elyra --cov --cov-report=xml
@@ -234,7 +234,7 @@ test: test-server test-ui ## Run all tests (backend, frontend and cypress integr
 ## Doc targets
 
 docs-dependencies:
-	@pip install -q -r docs/requirements.txt
+	@$(PYTHON_PIP) install -q -r docs/requirements.txt
 
 docs: docs-dependencies ## Build docs
 	make -C docs clean html
@@ -304,7 +304,7 @@ publish-container-images: publish-elyra-image publish-kf-notebook-image ## Publi
 
 validate-runtime-images: # Validates delivered runtime-images meet minimum criteria
 	@required_commands=$(REQUIRED_RUNTIME_IMAGE_COMMANDS) ; \
-	pip install jq ; \
+	$(PYTHON_PIP) install jq ; \
 	for file in `find etc/config/metadata/runtime-images -name "*.json"` ; do \
 		image=`cat $$file | jq -e -r '.metadata.image_name'` ; \
 		if [ $$? -ne 0 ]; then \
@@ -320,7 +320,7 @@ validate-runtime-image: # Validate that runtime image meets minimum criteria
 		echo "Usage: make validate-runtime-image image=<container-image-name>" ; \
 		exit 1 ; \
 	fi ; \
-	pip install -q jq ; \
+	$(PYTHON_PIP) install -q jq ; \
 	fail=0; \
 	echo "***********************************************************" ; \
 	echo "Validating container image $$image" ; \
